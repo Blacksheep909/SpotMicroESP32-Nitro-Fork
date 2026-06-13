@@ -175,9 +175,3 @@ Following these steps will configure your FS-i6X transmitter to ensure compatibi
 
 There are many other things I am likely forgetting, and of course this will happen in due time, but I am unsure how long they may take -right now my aim is to upload this code to get people kickstarted, and maybe someone will take on the challenge to make it even better!
 
-## Contributing
-
-- For contributions or to report issues, please contact us or open an issue in this fork’s repository.
-
-### My Discord is blacksheep909 if you would like to contact me
----
