@@ -13,16 +13,23 @@ This SpotMicroESP32 project fork is designed to provide a more modular and user-
 Key Enhancements in This Fork
 
 ### Arduino Code Integration: 
-- I've added Arduino-based code that simplifies control logic, particularly for managing the SpotMicro’s movement and gait sequences. This code is compatible with the FS-i6 hobby controller, allowing for responsive joystick-based navigation.
+- Arduino-based code that simplifies control logic, particularly for managing the SpotMicro’s movement and gait sequences. This code is compatible with the FS-i6 hobby controller, and now also CRSF controllers allowing for responsive joystick-based navigation.
 
 ### Custom PCB Design: 
 - The custom PCB allows for better organization and management of SpotMicro’s hardware components, providing dedicated ports for servos, the ESP32, power distribution, and sensor connections. This streamlined layout reduces wiring complexity and optimizes power delivery for consistent performance.
 
-### FS-i6X Transmitter Support: 
+### Crossfire Protocol (CRSF) Support: (Beta)
+- A new introduces experimental beta support for the CRSF (Crossfire) protocol, bringing a more modern control protocol to SpotMicro. The integration includes the following:
+          Enhanced Performance: Utilizing the CRSF protocol provides a significantly faster response time for primary movement functions
+          Custom Protocol Implementation: The backend utilizes a streamlined serial parser to handle control inputs efficiently, laying the groundwork for robust, long-range operation.
+
+  For the standalone protocol code and further technical details, please refer to my dedicated CRSF repository at [blacksheep909/CRSF.](https://github.com/Blacksheep909/ESP32_CRSF_Reader)
+
+### FS-i6X Transmitter (IBUS) Support: 
 - This version supports the FS-i6X transmitter, a popular and powerful hobby-grade controller. The controller setup includes the following:
         Channel Assignments: The first four channels on the FS-iX6 are configured to control SpotMicro’s primary movement functions, including forward-backward and left-right directional movement, as well as additional modes like tilt and reverse.
         Failsafe Configuration: A failsafe mode activates when the signal from the FS-i6X transmitter is lost, ensuring SpotMicro safely stops movement to prevent any unintended actions.
-
+  
 ### Improved Movement Control:
 - This fork introduces refined gait sequences and step timings, using our custom Arduino code to achieve smooth, natural movement. The gait cycle has been optimized for simultaneous leg movement, allowing SpotMicro to achieve a faster and more stable walk. (in progress)
 - (Future) Using the Ramp library for servo control enables smooth interpolation and acceleration for each step phase.
