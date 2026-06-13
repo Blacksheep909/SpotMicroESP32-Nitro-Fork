@@ -6,6 +6,42 @@ This directory contains the Arduino code for controlling the SpotMicroESP32 robo
 
 - Below is some instructions on how to quickstart the provided (current) Arduino Code.
 
+## Choose Your Receiver Version
+
+The current code is split into separate receiver-specific sketches. Pick the folder that matches your receiver setup instead of trying to combine both receiver types in one sketch:
+
+- `code/Versions/SpotMicroESP32_Nitro_IBUS` - for FlySky FS-i6X / FS-i6B iBus setups.
+- `code/Versions/SpotMicroESP32_Nitro_CRSF_BETA` - for CRSF / ExpressLRS receiver setups (BETA).
+- `code/Versions/archive/0.8.6_INDEX_sketch_nov2_GAIT_V8` - untouched archive copy of the older sketch.
+
+The CRSF (BETA) implementation has not yet been tested on this SpotMicroESP32-Nitro dog hardware. The CRSF reader code has worked on other ESP32 robot/quadruped projects, but test this fork with the robot lifted safely, or with the servos disconnected, before trusting it on the dog.
+
+The CRSF reader files included in `SpotMicroESP32_Nitro_CRSF_BETA` are copied/adapted from [Blacksheep909/ESP32_CRSF_Reader](https://github.com/Blacksheep909/ESP32_CRSF_Reader). That project is focused on reading CRSF / ExpressLRS RC channel frames on ESP32 and does not implement the full CRSF telemetry/device ecosystem.
+
+### iBus Failsafe Note
+
+The FS-i6X / FS-i6B failsafe can be awkward because the receiver may keep outputting configured failsafe channel positions over iBus instead of simply disappearing. That means firmware should not rely only on "no data received" to detect a failsafe. The iBus fork now treats invalid channel ranges and the configured failsafe channel pattern as unsafe, then lies the dog down without blocking inside a failsafe loop.
+
+Useful external reference: [INAV's receiver documentation](https://github.com/iNavFlight/inav/blob/e7d5cceb06878ba82b35695131fa68ab9249032b/docs/Rx.md) describes iBus as the FlySky serial receiver protocol for FS-IA6B/FS-X6B/FS-IA10-style receivers and notes that signal loss can be detected through no RX data, serial receiver failsafe indication, or control-channel values outside configured valid ranges.
+
+### CRSF Wiring Note
+
+The CRSF fork uses `Serial2` and defaults to:
+
+| CRSF / ExpressLRS receiver | ESP32 DevKitC |
+| --- | --- |
+| TX | GPIO26 |
+| RX | GPIO17, optional telemetry |
+| GND | GND |
+| 5V or 3V3 | Receiver-appropriate power |
+
+GPIO26 is used as the default CRSF RX pin because GPIO16 is already used by the buzzer in this dog code. If you use a different ESP32 pin, update `kCrsfRxPin` in `SpotMicroESP32_Nitro_CRSF_BETA.ino`.
+
+Official ExpressLRS references:
+
+- [ExpressLRS receiver wiring](https://www.expresslrs.org/quick-start/receivers/wiring-up/)
+- [ExpressLRS receiver serial protocols](https://www.expresslrs.org/software/serial-protocols/)
+
 ## Features
 
 - **Joystick-Controlled Movement**: Supports forward-backward (FB) and left-right (LR) control using the FS-i6 transmitter, with configurable deadzones for precise control.
@@ -26,7 +62,9 @@ This directory contains the Arduino code for controlling the SpotMicroESP32 robo
 
 - **Hardware**:
   - SpotMicroESP32 robot dog with our custom PCB.
-  - FS-i6X hobby controller.
+  - One supported receiver setup:
+    - FS-i6X transmitter with FS-i6B / iBus receiver for `SpotMicroESP32_Nitro_IBUS`.
+    - CRSF / ExpressLRS receiver for `SpotMicroESP32_Nitro_CRSF_BETA`.
 ![Reciever](https://github.com/Blacksheep909/SpotMicroESP32/blob/master/code/FS-I6X%2B20160331.450(1).png)
 
 - **Software**:
@@ -43,8 +81,10 @@ This directory contains the Arduino code for controlling the SpotMicroESP32 robo
   - [Adafruit Unified Sensor](https://github.com/adafruit/Adafruit_Sensor): Standardized sensor library used by many Adafruit sensor libraries.
   - [AxTypeTraits](https://github.com/xoRaxes/AxTypeTraits): Provides type-trait functionalities, required by some Arduino projects.
   - [Bonezegi PCA9685](https://github.com/bonezegi/PCA9685): An alternative PCA9685 library for servo control.
-  - [IBusBM](https://github.com/bolderflight/IBusBM): For handling the FS-i6 (iBus) receiver communication.
+  - [IBusBM](https://github.com/bolderflight/IBusBM): Required for the FS-i6 / iBus version.
   - [Ramp](https://github.com/Erriez/ErriezRamp): Controls ramping (acceleration/deceleration) of servo movements.
+
+  The CRSF version includes `Esp32CrsfReader.h` and `Esp32CrsfReader.cpp` directly in the sketch folder, copied/adapted from [Blacksheep909/ESP32_CRSF_Reader](https://github.com/Blacksheep909/ESP32_CRSF_Reader).
 
 - All of these libraries can be accessed within the Arduino IDE in the Libraries tab
 ### Setup and Configuration
