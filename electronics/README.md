@@ -36,6 +36,26 @@ The design also anticipates future additions, like an **ESP32-CAM** module, but 
 ![SpotMicroESP32](https://github.com/Blacksheep909/SpotMicroESP32/blob/master/electronics/Images/1100x1100.jpg)
 
    - Here is a photo of where to connect the 3-pin connector to the FS-i6B. We want to use the 'IBUS SERVO' pins on the reciever, which are outlined in green on the photo.
+
+### Optional CRSF / ExpressLRS Receiver Wiring
+
+If you are using the `SpotMicroESP32_Nitro_CRSF` sketch instead of the iBus sketch, wire a CRSF / ExpressLRS receiver to a hardware UART on the ESP32.
+
+Default CRSF sketch wiring:
+
+| CRSF / ExpressLRS receiver | ESP32 DevKitC |
+| --- | --- |
+| TX | GPIO26 |
+| RX | GPIO17, optional telemetry |
+| GND | GND |
+| 5V or 3V3 | Receiver-appropriate power |
+
+Most receive-only robot control only needs receiver `TX` to ESP32 `RX`, plus power and common ground. Receiver `RX` is only needed later if telemetry back to the handset is added.
+
+GPIO26 is used by default because GPIO16 is already assigned to the buzzer in the current dog code. If your PCB or wiring uses a different UART pin, update `kCrsfRxPin` in `code/Versions/SpotMicroESP32_Nitro_CRSF/SpotMicroESP32_Nitro_CRSF.ino`.
+
+The CRSF implementation has not yet been tested on this SpotMicroESP32-Nitro dog hardware. Test receiver channel output with the robot lifted safely, or with the servos disconnected, before using it on the dog.
+
 6. The **KY-006 Buzzer** can be attached to output pins on the PCB. I reccommend placing the Buzzer somewhere in the dog where it is still inside the shell, and won't interfere with other parts. You can also solder it directly to the board.
 
 7. **OLED Display and Relay Module**:

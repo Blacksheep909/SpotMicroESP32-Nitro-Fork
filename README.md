@@ -49,6 +49,18 @@ This repository is currently just my hobby and as such, it will have its own pac
 - Tilt Mode: This mode enables the robot to rotate its upper body, controlled by the joystick to look at objects from different angles.
 - Failsafe Activation: If the FS-i6X loses signal, SpotMicro automatically stops, ensuring safety during operation.
 
+## Receiver Code Versions
+
+The Arduino code now has separate receiver-specific sketch folders under `code/Versions`:
+
+- `SpotMicroESP32_Nitro_IBUS` for FlySky FS-i6X / FS-i6B iBus.
+- `SpotMicroESP32_Nitro_CRSF` for CRSF / ExpressLRS.
+- `archive/0.8.6_INDEX_sketch_nov2_GAIT_V8` as an untouched archive copy of the older sketch.
+
+The CRSF fork is experimental on this specific dog hardware. The CRSF reader has worked on other ESP32 robot/quadruped projects, but it should be tested with the dog lifted safely or with servos disconnected first.
+
+The CRSF reader files in the CRSF sketch are copied/adapted from [Blacksheep909/ESP32_CRSF_Reader](https://github.com/Blacksheep909/ESP32_CRSF_Reader), which describes itself as a small Arduino / PlatformIO library for reading CRSF / ExpressLRS RC channel frames on ESP32.
+
 Additional Resources
 
 For more information on hardware assembly and some electronics please refer to the [original repository](https://github.com/michaelkubina/SpotMicroESP32) and check out the documentation in this fork for specific PCB and code setup details.
