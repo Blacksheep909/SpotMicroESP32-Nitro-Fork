@@ -1,8 +1,8 @@
-# SpotMicroESP32 Nitro CRSF
+# SpotMicroESP32 Nitro CRSF (BETA)
 
-Use this sketch for CRSF / ExpressLRS receivers.
+Use this beta sketch for CRSF / ExpressLRS receivers.
 
-This CRSF implementation has not yet been tested on the SpotMicroESP32-Nitro dog hardware. The `Esp32CrsfReader` code has worked on other ESP32 robot/quadruped projects, but test this sketch with the robot lifted safely or with servos disconnected before using it on the dog.
+This CRSF (BETA) implementation has not yet been tested on the SpotMicroESP32-Nitro dog hardware. The `Esp32CrsfReader` code has worked on other ESP32 robot/quadruped projects, but test this sketch with the robot lifted safely or with servos disconnected before using it on the dog.
 
 The `Esp32CrsfReader` files in this folder are copied/adapted from [Blacksheep909/ESP32_CRSF_Reader](https://github.com/Blacksheep909/ESP32_CRSF_Reader). That repo describes the library as a CRSF / ExpressLRS RC channel reader for ESP32 projects, not a complete CRSF telemetry/device implementation.
 

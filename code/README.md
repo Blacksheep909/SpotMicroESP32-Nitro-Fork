@@ -11,12 +11,12 @@ This directory contains the Arduino code for controlling the SpotMicroESP32 robo
 The current code is split into separate receiver-specific sketches. Pick the folder that matches your receiver setup instead of trying to combine both receiver types in one sketch:
 
 - `code/Versions/SpotMicroESP32_Nitro_IBUS` - for FlySky FS-i6X / FS-i6B iBus setups.
-- `code/Versions/SpotMicroESP32_Nitro_CRSF` - for CRSF / ExpressLRS receiver setups.
+- `code/Versions/SpotMicroESP32_Nitro_CRSF_BETA` - for CRSF / ExpressLRS receiver setups (BETA).
 - `code/Versions/archive/0.8.6_INDEX_sketch_nov2_GAIT_V8` - untouched archive copy of the older sketch.
 
-The CRSF implementation has not yet been tested on this SpotMicroESP32-Nitro dog hardware. The CRSF reader code has worked on other ESP32 robot/quadruped projects, but test this fork with the robot lifted safely, or with the servos disconnected, before trusting it on the dog.
+The CRSF (BETA) implementation has not yet been tested on this SpotMicroESP32-Nitro dog hardware. The CRSF reader code has worked on other ESP32 robot/quadruped projects, but test this fork with the robot lifted safely, or with the servos disconnected, before trusting it on the dog.
 
-The CRSF reader files included in `SpotMicroESP32_Nitro_CRSF` are copied/adapted from [Blacksheep909/ESP32_CRSF_Reader](https://github.com/Blacksheep909/ESP32_CRSF_Reader). That project is focused on reading CRSF / ExpressLRS RC channel frames on ESP32 and does not implement the full CRSF telemetry/device ecosystem.
+The CRSF reader files included in `SpotMicroESP32_Nitro_CRSF_BETA` are copied/adapted from [Blacksheep909/ESP32_CRSF_Reader](https://github.com/Blacksheep909/ESP32_CRSF_Reader). That project is focused on reading CRSF / ExpressLRS RC channel frames on ESP32 and does not implement the full CRSF telemetry/device ecosystem.
 
 ### iBus Failsafe Note
 
@@ -35,7 +35,7 @@ The CRSF fork uses `Serial2` and defaults to:
 | GND | GND |
 | 5V or 3V3 | Receiver-appropriate power |
 
-GPIO26 is used as the default CRSF RX pin because GPIO16 is already used by the buzzer in this dog code. If you use a different ESP32 pin, update `kCrsfRxPin` in `SpotMicroESP32_Nitro_CRSF.ino`.
+GPIO26 is used as the default CRSF RX pin because GPIO16 is already used by the buzzer in this dog code. If you use a different ESP32 pin, update `kCrsfRxPin` in `SpotMicroESP32_Nitro_CRSF_BETA.ino`.
 
 Official ExpressLRS references:
 
@@ -64,7 +64,7 @@ Official ExpressLRS references:
   - SpotMicroESP32 robot dog with our custom PCB.
   - One supported receiver setup:
     - FS-i6X transmitter with FS-i6B / iBus receiver for `SpotMicroESP32_Nitro_IBUS`.
-    - CRSF / ExpressLRS receiver for `SpotMicroESP32_Nitro_CRSF`.
+    - CRSF / ExpressLRS receiver for `SpotMicroESP32_Nitro_CRSF_BETA`.
 ![Reciever](https://github.com/Blacksheep909/SpotMicroESP32/blob/master/code/FS-I6X%2B20160331.450(1).png)
 
 - **Software**:

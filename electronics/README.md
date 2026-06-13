@@ -39,7 +39,7 @@ The design also anticipates future additions, like an **ESP32-CAM** module, but 
 
 ### Optional CRSF / ExpressLRS Receiver Wiring
 
-If you are using the `SpotMicroESP32_Nitro_CRSF` sketch instead of the iBus sketch, wire a CRSF / ExpressLRS receiver to a hardware UART on the ESP32.
+If you are using the `SpotMicroESP32_Nitro_CRSF_BETA` sketch instead of the iBus sketch, wire a CRSF / ExpressLRS receiver to a hardware UART on the ESP32.
 
 Default CRSF sketch wiring:
 
@@ -52,9 +52,9 @@ Default CRSF sketch wiring:
 
 Most receive-only robot control only needs receiver `TX` to ESP32 `RX`, plus power and common ground. Receiver `RX` is only needed later if telemetry back to the handset is added.
 
-GPIO26 is used by default because GPIO16 is already assigned to the buzzer in the current dog code. If your PCB or wiring uses a different UART pin, update `kCrsfRxPin` in `code/Versions/SpotMicroESP32_Nitro_CRSF/SpotMicroESP32_Nitro_CRSF.ino`.
+GPIO26 is used by default because GPIO16 is already assigned to the buzzer in the current dog code. If your PCB or wiring uses a different UART pin, update `kCrsfRxPin` in `code/Versions/SpotMicroESP32_Nitro_CRSF_BETA/SpotMicroESP32_Nitro_CRSF_BETA.ino`.
 
-The CRSF implementation has not yet been tested on this SpotMicroESP32-Nitro dog hardware. Test receiver channel output with the robot lifted safely, or with the servos disconnected, before using it on the dog.
+The CRSF (BETA) implementation has not yet been tested on this SpotMicroESP32-Nitro dog hardware. Test receiver channel output with the robot lifted safely, or with the servos disconnected, before using it on the dog.
 
 6. The **KY-006 Buzzer** can be attached to output pins on the PCB. I reccommend placing the Buzzer somewhere in the dog where it is still inside the shell, and won't interfere with other parts. You can also solder it directly to the board.
 
