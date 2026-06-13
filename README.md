@@ -5,7 +5,7 @@ This fork of the SpotMicroESP32 project builds on the excellent foundation by mi
 You can find the 3D-printing parts on Thingiverse as well: https://www.thingiverse.com/thing:4559827/files
 (There are a few modification files in this repo for updated metal servo horns, which I fully recommend using)
 
-- Join the Discord-Channel for this remix: https://discord.gg/s8F6xHGk9Y (#spotmicro-esp32)
+- Join the Discord-Channel: https://discord.gg/s8F6xHGk9Y (#spotmicro-esp32)
 
 ## Overview
 This SpotMicroESP32 project fork is designed to provide a more modular and user-friendly experience, particularly for those interested in robotics and DIY projects. With the added support for the FS-i6X transmitter and a custom PCB, users now have more flexible and powerful ways to interact with and program their robot dog.
