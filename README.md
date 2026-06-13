@@ -10,7 +10,7 @@ You can find the 3D-printing parts on Thingiverse as well: https://www.thingiver
 ## Overview
 This SpotMicroESP32 project fork is designed to provide a more modular and user-friendly experience, particularly for those interested in robotics and DIY projects. With the added support for the FS-i6X transmitter and a custom PCB, users now have more flexible and powerful ways to interact with and program their robot dog.
 
-### Key Enhancements in This Fork
+## Key Enhancements in This Fork
 
 ### Arduino Code Integration: 
 - Arduino-based code that simplifies control logic, particularly for managing the SpotMicro’s movement and gait sequences. This code is compatible with the FS-i6 hobby controller, and now also CRSF controllers allowing for responsive joystick-based navigation.
