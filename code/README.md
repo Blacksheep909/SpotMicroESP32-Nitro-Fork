@@ -47,7 +47,7 @@ Official ExpressLRS references:
 - **Joystick-Controlled Movement**: Supports forward-backward (FB) and left-right (LR) control using the FS-i6 transmitter, with configurable deadzones for precise control.
 - **Failsafe Functionality**: Integrated failsafe handling stops the robot safely if the FS-i6 signal is lost.
 - **Gait Customization**: Choose between square and arc gait cycles, with options to control timing, speed, and deadzones.
-- **Tilt Mode**: Allows the robot to tilt its head or body to look around, providing an additional range of motion.
+- **Tilt Mode**: Channel 5 low selects a conservative body-tilt mode. The right stick left/right input offsets the shoulder servos, and the forward/back input nudges the front/rear leg IK targets for a small body pitch.
 - **Servo Interpolation Using Ramp Library**: Smooth, controlled movements with acceleration and deceleration support for more lifelike walking.
 
 ## Code Structure
@@ -113,7 +113,10 @@ There may be another fix for this, or the IBUS-BM library may be updated to be c
   - Use the FS-i6 joystick for basic navigation.
   - Forward-backward (FB) control is prioritized, with left-right (LR) control enabled when FB is neutral.
 - **Tilt Mode**:
-  - Engage tilt mode via joystick to adjust SpotMicro’s head position.
+  - Put channel 5 in the low position while the dog is standing.
+  - Use the right stick left/right axis to roll the body through the shoulder servos.
+  - Use the right stick forward/back axis to pitch the body by shifting front and rear leg IK targets.
+  - The default limits are intentionally small (`10` degrees of shoulder offset and `3` IK-coordinate units of pitch offset) because the shoulder servo directions still need hardware verification.
 - **Failsafe Activation**:
   - When the FS-i6 signal is lost, the robot stops moving automatically and returns to idle position.
 
@@ -169,9 +172,8 @@ Following these steps will configure your FS-i6X transmitter to ensure compatibi
 
 # Future development
 - The gait and inverse kinematics are currently still in the early-ish side of development. They work, but can always be better of course.
-- I would like to add a tilt mode feature where the user can look around with the dog using a joystick.
 - Another feature I would like to add is a move advanced walking gait -this is currently my main aim with the code
-- A missing feature, which is of course fully neccesary is the LR code (left-right), so the dog can actually turn, but currently the shoulders are not included in the inverse kinematics.
+- A missing feature, which is of course fully neccesary is the LR code (left-right), so the dog can actually turn. The shoulder servos are now used conservatively in tilt mode, but walking still needs a full calibrated 3D shoulder/hip/knee IK model.
 
 There are many other things I am likely forgetting, and of course this will happen in due time, but I am unsure how long they may take -right now my aim is to upload this code to get people kickstarted, and maybe someone will take on the challenge to make it even better!
 

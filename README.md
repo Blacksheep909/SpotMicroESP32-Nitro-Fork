@@ -44,7 +44,7 @@ This repository is currently just my hobby and as such, it will have its own pac
 
 ## Repo/Code Usage Aims
 - Basic Walking and Navigation: Use the FS-i6X joystick to control SpotMicro’s direction. Push forward to walk, pull back to reverse, and move the stick left or right to turn.
-- Tilt Mode: This mode enables the robot to rotate its upper body, controlled by the joystick to look at objects from different angles.
+- Tilt Mode: This mode uses small shoulder-servo roll offsets and front/rear IK target shifts so the robot can lean while standing. Test this with the robot lifted first, because shoulder servo direction can vary by build.
 - Failsafe Activation: If the FS-i6X loses signal, SpotMicro automatically stops, ensuring safety during operation.
 
 ## Receiver Code Versions

@@ -232,6 +232,7 @@ void powerOnAnimation() {
 //--------------------------------------------------------------------------------------------------
 //Function to convert pulse to angle for servos
 int angleToPulse(int ang) {
+  ang = constrain(ang, 0, 180);
   int pulse = map(ang, 0, 180, SERVOMIN, SERVOMAX);  // map angle of 0 to 180 to Servo min and Servo max
   return pulse;
 }
@@ -704,7 +705,7 @@ void loop() {
     //-----------------------------------------------------------------------
     //Place if current action state code here
     if (currentActionState == TILT_STATE && currentState == STAND_UP) {
-      //TILT STATE CODE HERE
+      TiltFunc();
       isWalking = 0;
     }
     if (currentActionState == HANDSHAKE_STATE && currentState == STAND_UP) {

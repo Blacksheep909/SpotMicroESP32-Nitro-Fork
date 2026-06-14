@@ -14,6 +14,7 @@ Open only the folder that matches your receiver. The iBus and CRSF versions are 
 - The CRSF (BETA) version uses `Esp32CrsfReader` and `crsf.linkAlive()` for receiver freshness.
 - The CRSF (BETA) version has not yet been tested on this SpotMicroESP32-Nitro dog hardware. The CRSF reader has worked on other ESP32 robot/quadruped projects, but first tests should be done with the robot lifted or servos disconnected.
 - The CRSF reader files are copied/adapted from [Blacksheep909/ESP32_CRSF_Reader](https://github.com/Blacksheep909/ESP32_CRSF_Reader).
+- Both receiver versions now include a conservative tilt mode. Channel 5 low selects tilt while standing; channel 1 rolls the shoulder servos and channel 2 shifts the front/rear leg IK targets for pitch. Test this mode with the robot lifted first, because the shoulder servo sign may need reversing for a specific build.
 
 ## CRSF Default Pins
 

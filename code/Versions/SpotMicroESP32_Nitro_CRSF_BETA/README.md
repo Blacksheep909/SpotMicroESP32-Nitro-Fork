@@ -35,3 +35,9 @@ Helpful setup references:
 ## Failsafe
 
 This sketch uses `crsf.linkAlive()` and channel range checks. If fresh CRSF frames are not being received, or channel data is invalid, the sketch enters failsafe, stops walking, and commands the dog to lie down if it was standing.
+
+## Tilt Mode
+
+Channel 5 low selects tilt mode while the dog is standing. Channel 1 controls a small shoulder-servo roll offset, and channel 2 shifts the front/rear leg IK targets for pitch.
+
+The defaults are intentionally conservative: `10` degrees maximum shoulder offset and `3` IK-coordinate units maximum pitch shift. Test with the robot lifted first, because the shoulder servo sign may need reversing on a specific build.

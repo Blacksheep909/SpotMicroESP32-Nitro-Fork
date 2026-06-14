@@ -59,8 +59,10 @@ In this current code iteration, we’ve set up inverse kinematics (IK) to calcul
 
 ### Code Limitations and Future Adjustments
 
-#### Shoulders Not Included
-   - Currently, the code only calculates angles for the **hip** and **knee** joints, not the **shoulder** joints. For a fully articulated movement, shoulder angles would need to be included in the IK calculations to account for all degrees of freedom in the front legs.
+#### Shoulder Axis Status
+   - The walking IK still solves the **hip** and **knee** joints in the leg side plane.
+   - The code now names the four shoulder/abduction servo channels and uses them in a conservative tilt mode, but this is not a fully calibrated 3D leg solver yet.
+   - A full shoulder IK model still needs hardware-verified shoulder axis directions, servo zero offsets, and safe lateral foot limits for each leg.
 
 #### Rotation of the Coordinate System
    - The entire coordinate system for the IK calculations is rotated 90 degrees to the right. This means:
@@ -94,12 +96,14 @@ Each step in the gait cycle triggers the `stepfrbl` or `stepflbr` functions, whi
 ### Summary
 
 This code provides a foundation for controlling the robot dog's legs using inverse kinematics. However:
-   - The IK model doesn’t include shoulder joints, limiting the flexibility of the robot.
+   - The walking IK model is still a 2D hip/knee solver.
+   - Tilt mode uses the shoulder channels for a small roll offset and shifts front/rear hip/knee IK targets for pitch, but should be tested with the robot lifted before ground use.
    - The coordinate system is rotated to match the dog's orientation, with the positive y-axis facing forward (I intend to fix this an make the y-axis vertical).
    
 ### Next Steps
 
 To further improve the robot’s movement:
-1. Implement inverse kinematics for the shoulder joints.
-2. Adjust and refine gait patterns for smoother and more natural movements.
-3. Tune the joystick deadzones and movement thresholds for responsive control.
+1. Hardware-calibrate the shoulder servo directions and neutral offsets.
+2. Extend the current 2D solver into a real 3D shoulder/hip/knee IK model with lateral foot targets.
+3. Adjust and refine gait patterns for smoother and more natural movements.
+4. Tune the joystick deadzones and movement thresholds for responsive control.

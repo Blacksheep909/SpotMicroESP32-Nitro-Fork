@@ -8,6 +8,28 @@ const float L2 = 11.8;  // Lower leg length
 const float x_default = L2;  // When knee is straight out horizontally
 const float y_default = L1;  // When upper leg is vertical
 
+const float kStandX = -5.0f;
+const float kStandY = 10.0f;
+const float kTiltPitchYOffset = 3.0f;
+const int kShoulderCenterDeg = 90;
+const int kTiltShoulderMaxDeg = 10;
+const int kTiltDeadzoneUs = 35;
+const int kTiltInputSpanUs = 500;
+const uint8_t kTiltRollChannel = 0;
+const uint8_t kTiltPitchChannel = 1;
+
+struct LegServoMap {
+  uint8_t shoulder;
+  uint8_t hip;
+  uint8_t knee;
+  bool mirrored;
+};
+
+const LegServoMap kFrontLeft = {0, 1, 2, true};
+const LegServoMap kFrontRight = {3, 4, 5, false};
+const LegServoMap kBackLeft = {6, 7, 8, true};
+const LegServoMap kBackRight = {9, 10, 11, false};
+
 // Rotation angle to align y-axis with the top leg
 float rotationAngle = radians(-45);  // Adjust this as needed (its in degrees then converted to radians)
 const bool kDebugKinematics = false;
@@ -33,69 +55,86 @@ void inverseKinematics(float x, float y, float &theta1, float &theta2) {
   theta1 = atan2(y_rotated, x_rotated) - atan2(k2, k1);
 }
 
+float rcOffset(uint8_t channelIndex, float maxOffset) {
+  int delta = readRcChannel(channelIndex) - 1500;
+  if (abs(delta) <= kTiltDeadzoneUs) {
+    return 0.0f;
+  }
 
-void stepfrbl(float x, float y){
-  // Calculate inverse kinematics
+  delta = constrain(delta, -kTiltInputSpanUs, kTiltInputSpanUs);
+  return (static_cast<float>(delta) / static_cast<float>(kTiltInputSpanUs)) * maxOffset;
+}
+
+void setServoAngle(uint8_t channel, int angle) {
+  pwm.setPWM(channel, 0, angleToPulse(constrain(angle, 0, 180)));
+}
+
+void setLegIk(const struct LegServoMap &leg, float x, float y) {
   float theta1, theta2;
   inverseKinematics(x, y, theta1, theta2);
 
-  // Convert angles from radians to degrees
-  int RhipAngle = radiansToDegrees(theta1);
-  int RkneeAngle = radiansToDegrees(theta2);
+  int hipAngle = radiansToDegrees(theta1);
+  int kneeAngle = radiansToDegrees(theta2);
 
-  // Convert from right to left
-  int LhipAngle = (180-RhipAngle);
-  int LkneeAngle = (180-RkneeAngle);
+  if (leg.mirrored) {
+    hipAngle = 180 - hipAngle;
+    kneeAngle = 180 - kneeAngle;
+  }
 
-  // Clamp the angles to be between 0 and 180 degrees
-  RhipAngle = constrain(RhipAngle, 0, 180);
-  RkneeAngle = constrain(RkneeAngle, 0, 180);
-  LhipAngle = constrain(LhipAngle, 0, 180);
-  LkneeAngle = constrain(LkneeAngle, 0, 180);
+  setServoAngle(leg.hip, hipAngle);
+  setServoAngle(leg.knee, kneeAngle);
 
-  // Move servos to calculated angles
-  pwm.setPWM(7, 0, angleToPulse(LhipAngle));//left side converted
-  pwm.setPWM(8, 0, angleToPulse(LkneeAngle));//left side converted
-  pwm.setPWM(4, 0, angleToPulse(RhipAngle));// right side default
-  pwm.setPWM(5, 0, angleToPulse(RkneeAngle));// right side default
   if (kDebugKinematics) {
-    Serial.println(LhipAngle);
-    Serial.println(LkneeAngle);
-    Serial.println(RhipAngle);
-    Serial.println(RkneeAngle);
+    Serial.print("leg ");
+    Serial.print(leg.hip);
+    Serial.print("/");
+    Serial.print(leg.knee);
+    Serial.print(" hip=");
+    Serial.print(hipAngle);
+    Serial.print(" knee=");
+    Serial.println(kneeAngle);
   }
 }
 
+void setShoulderAngles(int frontLeft, int frontRight, int backLeft, int backRight) {
+  setServoAngle(kFrontLeft.shoulder, frontLeft);
+  setServoAngle(kFrontRight.shoulder, frontRight);
+  setServoAngle(kBackLeft.shoulder, backLeft);
+  setServoAngle(kBackRight.shoulder, backRight);
+}
+
+void setStandingPoseWithShoulders(int frontLeft, int frontRight, int backLeft, int backRight) {
+  setShoulderAngles(frontLeft, frontRight, backLeft, backRight);
+  setLegIk(kFrontLeft, kStandX, kStandY);
+  setLegIk(kFrontRight, kStandX, kStandY);
+  setLegIk(kBackLeft, kStandX, kStandY);
+  setLegIk(kBackRight, kStandX, kStandY);
+}
+
+void TiltFunc() {
+  int rollOffset = static_cast<int>(rcOffset(kTiltRollChannel, kTiltShoulderMaxDeg));
+  float pitchOffset = rcOffset(kTiltPitchChannel, kTiltPitchYOffset);
+
+  int leftShoulder = kShoulderCenterDeg + rollOffset;
+  int rightShoulder = kShoulderCenterDeg - rollOffset;
+
+  setShoulderAngles(leftShoulder, rightShoulder, leftShoulder, rightShoulder);
+
+  setLegIk(kFrontLeft, kStandX, kStandY + pitchOffset);
+  setLegIk(kFrontRight, kStandX, kStandY + pitchOffset);
+  setLegIk(kBackLeft, kStandX, kStandY - pitchOffset);
+  setLegIk(kBackRight, kStandX, kStandY - pitchOffset);
+}
+
+
+void stepfrbl(float x, float y){
+  setLegIk(kBackLeft, x, y);
+  setLegIk(kFrontRight, x, y);
+}
+
 void stepflbr(float x, float y){
-  // Calculate inverse kinematics
-  float theta1, theta2;
-  inverseKinematics(x, y, theta1, theta2);
-
-  // Convert angles from radians to degrees
-  int RhipAngle = radiansToDegrees(theta1);
-  int RkneeAngle = radiansToDegrees(theta2);
-
-  // Convert from right to left
-  int LhipAngle = (180-RhipAngle);
-  int LkneeAngle = (180-RkneeAngle);
-
-  // Clamp the angles to be between 0 and 180 degrees
-  RhipAngle = constrain(RhipAngle, 0, 180);
-  RkneeAngle = constrain(RkneeAngle, 0, 180);
-  LhipAngle = constrain(LhipAngle, 0, 180);
-  LkneeAngle = constrain(LkneeAngle, 0, 180);
-
-  // Move servos to calculated angles
-  pwm.setPWM(10, 0, angleToPulse(RhipAngle));//left side converted
-  pwm.setPWM(11, 0, angleToPulse(RkneeAngle));//left side converted
-  pwm.setPWM(1, 0, angleToPulse(LhipAngle));// right side default
-  pwm.setPWM(2, 0, angleToPulse(LkneeAngle));// right side default
-  if (kDebugKinematics) {
-    Serial.println(LhipAngle);
-    Serial.println(LkneeAngle);
-    Serial.println(RhipAngle);
-    Serial.println(RkneeAngle);
-  }
+  setLegIk(kBackRight, x, y);
+  setLegIk(kFrontLeft, x, y);
 }
 
 void WalkFunc() {
@@ -208,9 +247,7 @@ void WalkFunc() {
     */
     else {
       // Reset to standing position if joystick is in deadzone
-      for (int i = 0; i < 12; i++) {
-        pwm.setPWM(i, 0, angleToPulse(90));
-      }
+      setStandingPoseWithShoulders(kShoulderCenterDeg, kShoulderCenterDeg, kShoulderCenterDeg, kShoulderCenterDeg);
       isWalking = 0;
       stepFlagFB = 0;
       stepFlagLR = 0;
